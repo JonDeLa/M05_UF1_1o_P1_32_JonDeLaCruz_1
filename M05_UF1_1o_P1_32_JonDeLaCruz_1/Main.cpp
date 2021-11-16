@@ -9,6 +9,7 @@ void RellenarMapa();
 void Inputs();
 void Start();
 void Logica();
+void SetPuntos();
 //Vamos a crear un enum para controlar los tiles del mapa
 enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '*' };
 //Ahora vamos a crear lo que seria el mapa mediante una array bidimensional
@@ -23,6 +24,10 @@ int personaje_xPos = 10;
 int personaje_yPos = 5;
 //Bool para controlar el bucle del programa
 bool run = true;
+//Var Contador de muntos
+int map_points = 0;
+int player_points = 0;
+
 int main()
 {
 	//Vamos a crear un start antes de nada para que nos rellene el mapa y nos lo muestre nada mas empezar
@@ -70,8 +75,25 @@ void RellenarMapa()
 		CosoleScreen[14][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
 		CosoleScreen[15][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
 	}
+	SetPuntos();
 	
-	
+}
+void SetPuntos()
+{
+	//Tendremos que crear los puntos en el mapa en esta función de aqui
+	CosoleScreen[1][1] = MAP_TILES::POINT;
+	CosoleScreen[1][46] = MAP_TILES::POINT;
+	CosoleScreen[10][70] = MAP_TILES::POINT;
+	CosoleScreen[15][15] = MAP_TILES::POINT;
+	CosoleScreen[27][1] = MAP_TILES::POINT;
+	CosoleScreen[27][56] = MAP_TILES::POINT;
+	CosoleScreen[1][117] = MAP_TILES::POINT;
+	CosoleScreen[17][98] = MAP_TILES::POINT;
+	CosoleScreen[19][101] = MAP_TILES::POINT;
+	CosoleScreen[27][117] = MAP_TILES::POINT;
+
+	//Contamos los puntos que va a tener el mapa
+	map_points = 10;
 }
 void Logica()
 {
@@ -109,6 +131,15 @@ void Logica()
 	{
 		personaje_yPosN = personaje_yPos;
 		personaje_xPosN = personaje_xPos;
+	}
+	else if (CosoleScreen[personaje_yPosN][personaje_xPosN] == MAP_TILES::POINT)
+	{
+		//Aqui creamos el sistema de los puntos, por ejemplo, Actualizamos contadores y eliminamos los puntos 
+		map_points--;
+		player_points++;
+		CosoleScreen[personaje_yPosN][personaje_xPosN] = MAP_TILES::EMPTY;
+
+
 	}
 	//Aqui terminamos de igualar nuestra posición con la posicion que hemos estado operando
 	personaje_yPos = personaje_yPosN;
