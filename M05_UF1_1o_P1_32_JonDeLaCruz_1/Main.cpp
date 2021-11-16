@@ -6,11 +6,15 @@ using namespace std;
 //Inicializamos funciones
 void ImprimirPantalla();
 void RellenarMapa();
+void Inputs();
 void Start();
 //Vamos a crear un enum para controlar los tiles del mapa
 enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '*' };
 //Ahora vamos a crear lo que seria el mapa mediante una array bidimensional
 MAP_TILES CosoleScreen[CONSOLE_HEIGHT][CONSOLE_WIDTH];
+//Enum para los imputs
+enum USER_INPUT { NONE, UP, DOWN, RIGHT, LEFT, QUIT };
+USER_INPUT input = USER_INPUT::NONE;
 //Var del personaje
 char personaje = '@';
 //Var de posición
@@ -24,7 +28,7 @@ int main()
 	Start();
 	while (run)
 	{
-
+		Inputs();
 		ImprimirPantalla();
 	}
 	//Imprimimos los datos y finalizamos el juego.
@@ -57,6 +61,37 @@ void RellenarMapa()
 	}
 	
 	
+}
+void Inputs() {
+	//Dato Curioso: Variables Locales en azul, variables globales blancas 
+	char input_local;
+	cin >> input_local;
+	//Este switch lo utilizamos para el Enum de USER_INPUT, lo modificamos para posteriormente trabajar con el 
+	switch (input_local)
+	{
+	case 'W':
+	case'w':
+		personaje_yPos--;
+		break;
+	case 'A':
+	case'a':
+		personaje_xPos--;
+		break;
+	case 'S':
+	case's':
+		personaje_yPos++;
+		break;
+	case 'D':
+	case 'd':
+		personaje_xPos++;
+		break;
+	case'Q':
+	case'q':
+		run = false;
+		break;
+	default:
+		break;
+	}
 }
 void ImprimirPantalla()
 {
