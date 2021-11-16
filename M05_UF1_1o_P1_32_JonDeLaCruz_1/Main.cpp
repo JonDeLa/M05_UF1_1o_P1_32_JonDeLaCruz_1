@@ -10,6 +10,7 @@ void Inputs();
 void Start();
 void Logica();
 void SetPuntos();
+bool GameFinish();
 //Vamos a crear un enum para controlar los tiles del mapa
 enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '*' };
 //Ahora vamos a crear lo que seria el mapa mediante una array bidimensional
@@ -40,60 +41,13 @@ int main()
 	}
 	//Imprimimos los datos y finalizamos el juego.
 	system("CLS");
-	cout <<  " gracias por haber jugado :)" << endl;
+	cout << "Has logrado recolectar la siguiente cantidad de puntos: " << player_points << " gracias por haber jugado :)" << endl;
 }
+//Creamos esta función para que nada mas empezar el programa nos haga estas dos cosas
 void Start() {
 
 	RellenarMapa();
 	ImprimirPantalla();
-}
-void RellenarMapa()
-{
-	//Vamos a crear el marco del mapa
-	for (int i = 0; i < CONSOLE_HEIGHT; i++)
-	{
-		for (int j = 0; j < CONSOLE_WIDTH; j++)
-		{
-			//Lo he puesto de dos maneras diferntes
-			if (i == 0 || i == CONSOLE_HEIGHT - 1 || j == 0 || j == 118)
-			{
-				CosoleScreen[i][j] = MAP_TILES::WALL;
-			}
-			else
-			{
-				CosoleScreen[i][j] = MAP_TILES::EMPTY;
-			}
-		}
-
-		//Vamos a hacer los tp, por lo que tendremos que vaciar un segmento de las esquinas del mapa
-		CosoleScreen[12][0] = MAP_TILES::EMPTY;
-		CosoleScreen[13][0] = MAP_TILES::EMPTY;
-		CosoleScreen[14][0] = MAP_TILES::EMPTY;
-		CosoleScreen[15][0] = MAP_TILES::EMPTY;
-		CosoleScreen[12][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
-		CosoleScreen[13][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
-		CosoleScreen[14][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
-		CosoleScreen[15][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
-	}
-	SetPuntos();
-	
-}
-void SetPuntos()
-{
-	//Tendremos que crear los puntos en el mapa en esta función de aqui
-	CosoleScreen[1][1] = MAP_TILES::POINT;
-	CosoleScreen[1][46] = MAP_TILES::POINT;
-	CosoleScreen[10][70] = MAP_TILES::POINT;
-	CosoleScreen[15][15] = MAP_TILES::POINT;
-	CosoleScreen[27][1] = MAP_TILES::POINT;
-	CosoleScreen[27][56] = MAP_TILES::POINT;
-	CosoleScreen[1][117] = MAP_TILES::POINT;
-	CosoleScreen[17][98] = MAP_TILES::POINT;
-	CosoleScreen[19][101] = MAP_TILES::POINT;
-	CosoleScreen[27][117] = MAP_TILES::POINT;
-
-	//Contamos los puntos que va a tener el mapa
-	map_points = 10;
 }
 void Logica()
 {
@@ -145,6 +99,57 @@ void Logica()
 	personaje_yPos = personaje_yPosN;
 	personaje_xPos = personaje_xPosN;
 }
+void RellenarMapa()
+{
+	//Vamos a crear el marco del mapa
+	for (int i = 0; i < CONSOLE_HEIGHT; i++)
+	{
+		for (int j = 0; j < CONSOLE_WIDTH; j++)
+		{
+			//Lo he puesto de dos maneras diferntes
+			if (i == 0 || i == CONSOLE_HEIGHT - 1 || j == 0 || j == 118)
+			{
+				CosoleScreen[i][j] = MAP_TILES::WALL;
+			}
+			else
+			{
+				CosoleScreen[i][j] = MAP_TILES::EMPTY;
+			}
+		}
+
+		//Vamos a hacer los tp, por lo que tendremos que vaciar un segmento de las esquinas del mapa
+
+		CosoleScreen[12][0] = MAP_TILES::EMPTY;
+		CosoleScreen[13][0] = MAP_TILES::EMPTY;
+		CosoleScreen[14][0] = MAP_TILES::EMPTY;
+		CosoleScreen[15][0] = MAP_TILES::EMPTY;
+		CosoleScreen[12][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[13][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[14][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[15][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+
+	}
+	//Simplemente he creado una función para tenerlo un poco mas ordenado y que entre mejor a la vista
+	SetPuntos();
+}
+void SetPuntos()
+{
+	//Tendremos que crear los puntos en el mapa en esta función de aqui
+	CosoleScreen[1][1] = MAP_TILES::POINT;
+	CosoleScreen[1][46] = MAP_TILES::POINT;
+	CosoleScreen[10][70] = MAP_TILES::POINT;
+	CosoleScreen[15][15] = MAP_TILES::POINT;
+	CosoleScreen[27][1] = MAP_TILES::POINT;
+	CosoleScreen[27][56] = MAP_TILES::POINT;
+	CosoleScreen[1][117] = MAP_TILES::POINT;
+	CosoleScreen[17][98] = MAP_TILES::POINT;
+	CosoleScreen[19][101] = MAP_TILES::POINT;
+	CosoleScreen[27][117] = MAP_TILES::POINT;
+
+	//Contamos los puntos que va a tener el mapa
+	map_points = 10;
+}
+
 void Inputs() {
 	//Dato Curioso: Variables Locales en azul, variables globales blancas 
 	char input_local;
@@ -176,11 +181,24 @@ void Inputs() {
 		input = USER_INPUT::NONE;
 		break;
 	}
-}
+}// Esta función he decidido crearla para que nos devuelva si hemos recojido todas los puntos para poder detectar el final del juego
+bool GameFinish() {
+	//Siempre y cuando haya puntos en el mapa esta funcion nos devuelve false
+	if (map_points == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 
+}
+//Esta Función De Aqui lo que va a hacer es mostrar el mapa, el personaje, los puntos y terminamos el juego
 void ImprimirPantalla()
 {
-	
+	if (!GameFinish())
+	{
 		system("CLS");
 		for (int i = 0; i < CONSOLE_HEIGHT; i++)
 		{
@@ -198,8 +216,11 @@ void ImprimirPantalla()
 			}
 			cout << endl;
 		}
-		
+		cout << "Puntos: " << player_points << endl;
 	}
-	
-
+	else
+	{
+		run = false;
+	}
+}
 //Trabajo PacMan_JonDeLaCruz
