@@ -8,6 +8,7 @@ void ImprimirPantalla();
 void RellenarMapa();
 void Inputs();
 void Start();
+void Logica();
 //Vamos a crear un enum para controlar los tiles del mapa
 enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '*' };
 //Ahora vamos a crear lo que seria el mapa mediante una array bidimensional
@@ -29,6 +30,7 @@ int main()
 	while (run)
 	{
 		Inputs();
+		Logica();
 		ImprimirPantalla();
 	}
 	//Imprimimos los datos y finalizamos el juego.
@@ -58,9 +60,59 @@ void RellenarMapa()
 			}
 		}
 
+		//Vamos a hacer los tp, por lo que tendremos que vaciar un segmento de las esquinas del mapa
+		CosoleScreen[12][0] = MAP_TILES::EMPTY;
+		CosoleScreen[13][0] = MAP_TILES::EMPTY;
+		CosoleScreen[14][0] = MAP_TILES::EMPTY;
+		CosoleScreen[15][0] = MAP_TILES::EMPTY;
+		CosoleScreen[12][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[13][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[14][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[15][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
 	}
 	
 	
+}
+void Logica()
+{
+	//Vamos a crear la colisión para ello tenemos que saber donde estamos 
+	int personaje_yPosN = personaje_yPos;
+	int personaje_xPosN = personaje_xPos;
+	//Aqui modificamos la posicion con los enum
+	switch (input)
+	{
+	case UP:
+		personaje_yPosN--;
+		break;
+	case DOWN:
+		personaje_yPosN++;
+		break;
+	case RIGHT:
+		personaje_xPosN++;
+		break;
+	case LEFT:
+		personaje_xPosN--;
+		break;
+	case QUIT:
+		run = false;
+
+		break;
+	}
+	//Crearemos el tp de personaje
+	if (personaje_xPos < 0)
+	{
+		personaje_xPosN = CONSOLE_WIDTH - 1;
+	}
+	personaje_xPosN %= CONSOLE_WIDTH;
+	//Esta condición nos permitira decir que si nuestro personaje va a ir a una casilla que es un muro, este se quede donde esta
+	if (CosoleScreen[personaje_yPosN][personaje_xPosN] == MAP_TILES::WALL)
+	{
+		personaje_yPosN = personaje_yPos;
+		personaje_xPosN = personaje_xPos;
+	}
+	//Aqui terminamos de igualar nuestra posición con la posicion que hemos estado operando
+	personaje_yPos = personaje_yPosN;
+	personaje_xPos = personaje_xPosN;
 }
 void Inputs() {
 	//Dato Curioso: Variables Locales en azul, variables globales blancas 
@@ -71,28 +123,30 @@ void Inputs() {
 	{
 	case 'W':
 	case'w':
-		personaje_yPos--;
+		input = USER_INPUT::UP;
 		break;
 	case 'A':
 	case'a':
-		personaje_xPos--;
+		input = USER_INPUT::LEFT;
 		break;
 	case 'S':
 	case's':
-		personaje_yPos++;
+		input = USER_INPUT::DOWN;
 		break;
 	case 'D':
 	case 'd':
-		personaje_xPos++;
+		input = USER_INPUT::RIGHT;
 		break;
 	case'Q':
 	case'q':
-		run = false;
+		input = USER_INPUT::QUIT;
 		break;
 	default:
+		input = USER_INPUT::NONE;
 		break;
 	}
 }
+
 void ImprimirPantalla()
 {
 	
