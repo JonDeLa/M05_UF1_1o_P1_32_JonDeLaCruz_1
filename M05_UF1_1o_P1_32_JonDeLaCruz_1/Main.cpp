@@ -1,4 +1,6 @@
 #include <iostream>
+//Esta libreria de aqui tiene una funcion que nos permitira movernos sin poner enter
+#include <conio.h>
 using namespace std;
 
 #define CONSOLE_HEIGHT 29
@@ -152,10 +154,12 @@ void SetPuntos()
 
 void Inputs() {
 	//Dato Curioso: Variables Locales en azul, variables globales blancas 
-	char input_local;
-	cin >> input_local;
+	//char input_local;
+	//cin >> input_local;
+	char move;
+	move = _getch();
 	//Este switch lo utilizamos para el Enum de USER_INPUT, lo modificamos para posteriormente trabajar con el 
-	switch (input_local)
+	switch (move)
 	{
 	case 'W':
 	case'w':
